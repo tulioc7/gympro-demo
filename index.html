@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GymPro — Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0a;color:#f0f0f0;font-family:system-ui,sans-serif;min-height:100vh}
+.app{max-width:960px;margin:0 auto;padding:1rem}
+.hidden{display:none!important}
+.card{background:#1a1a1a;border:1px solid #2e2e2e;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.card-inner{background:#242424;border:1px solid #2e2e2e;border-radius:8px;padding:1rem;margin-bottom:8px}
+button.btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:700;border:none;background:#f97316;color:#000;transition:opacity .15s}
+button.btn:hover{opacity:.8}
+button.btn-p{background:#f97316;color:#000;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+button.btn-p:hover{opacity:.8}
+button.btn-s{padding:5px 12px;font-size:12px}
+button.btn-outline{background:transparent;color:#f97316;border:2px solid #f97316;font-weight:700;cursor:pointer;font-family:inherit;border-radius:8px;padding:6px 14px;font-size:13px}
+button.btn-outline:hover{background:#f97316;color:#000}
+button.btn-ghost{background:transparent;border:2px solid #888;color:#ddd;cursor:pointer;font-size:13px;font-family:inherit;padding:6px 14px;border-radius:8px;font-weight:700}
+button.btn-ghost:hover{border-color:#f97316;color:#f97316}
+button.btn-danger{background:#ef4444;color:#fff;border:none;font-weight:700;cursor:pointer;font-family:inherit;border-radius:8px;padding:5px 12px;font-size:12px}
+button.btn-warn{background:#eab308;color:#000;border:none;font-weight:700;cursor:pointer;font-family:inherit;border-radius:8px;padding:5px 12px;font-size:12px}
+.tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:9px 18px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;letter-spacing:.06em;text-transform:uppercase;border:none;background:#f97316;color:#000;opacity:.35;transition:opacity .15s}
+.tab:hover{opacity:.65}
+.tab.active{opacity:1}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.metric{background:#242424;border:1px solid #2e2e2e;border-radius:8px;padding:1rem;text-align:center}
+.mv{font-size:24px;font-weight:700}
+.mv-acc{color:#f97316}
+.ml{font-size:11px;color:#888;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.badge{display:inline-block;font-size:11px;padding:3px 9px;border-radius:4px;font-weight:700}
+.bg{background:#0a1f10;color:#22c55e;border:1px solid #15532e}
+.ba{background:#1a1500;color:#eab308;border:1px solid #713f12}
+.bb{background:#0a0f1f;color:#3b82f6;border:1px solid #1e3a8a}
+.br{background:#1f0a0a;color:#ef4444;border:1px solid #7f1d1d}
+.bo{background:#1f1008;color:#f97316;border:1px solid #7c3a0e}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.f1{flex:1}
+h2{font-size:15px;font-weight:700;margin-bottom:1rem;color:#f0f0f0;text-transform:uppercase;letter-spacing:.06em}
+h3{font-size:11px;font-weight:700;margin-bottom:6px;color:#888;text-transform:uppercase;letter-spacing:.08em}
+p{font-size:12px;color:#888}
+label{font-size:11px;color:#888;display:block;margin-bottom:4px;margin-top:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.sep{height:1px;background:#2e2e2e;margin:1rem 0}
+.arow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2e2e2e;flex-wrap:wrap}
+.arow:last-child{border-bottom:none}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:1px solid #3a3a3a}
+.av0{background:#1e3a5f;color:#60a5fa}.av1{background:#14532d;color:#4ade80}
+.av2{background:#78350f;color:#fbbf24}.av3{background:#7f1d1d;color:#f87171}.av4{background:#1f1008;color:#f97316}
+.emo-btn{font-size:13px;background:#242424;border:2px solid #3a3a3a;border-radius:8px;padding:8px 13px;cursor:pointer;color:#888;font-family:inherit;font-weight:600;transition:all .15s}
+.emo-btn:hover{color:#f97316;border-color:#f97316}
+.emo-btn.sel{border-color:#f97316;color:#f97316;background:#1f1008;font-weight:700}
+.rot-pill{display:inline-flex;font-size:11px;padding:3px 9px;border-radius:4px;border:1px solid #3a3a3a;color:#888;margin:2px;font-weight:600}
+.rot-pill.activa{background:#1f1008;color:#f97316;border-color:#7c3a0e;font-weight:700}
+.topbar{display:flex;align-items:center;gap:10px;padding:10px 0 14px;border-bottom:1px solid #2e2e2e;margin-bottom:1.25rem}
+.user-chip{display:flex;align-items:center;gap:8px;background:#242424;border:1px solid #3a3a3a;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}
+.logo{font-size:18px;font-weight:800;letter-spacing:-.02em;color:#f0f0f0}
+.logo span{color:#f97316}
+.ej-bloque{border:1px solid #2e2e2e;border-radius:12px;margin-bottom:12px;overflow:hidden}
+.ej-header{background:#242424;padding:11px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2e2e2e}
+.ej-nombre{font-size:13px;font-weight:700;color:#f0f0f0;flex:1;text-transform:uppercase;letter-spacing:.04em}
+.ej-meta{font-size:11px;color:#888}
+.serie-row{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid #2e2e2e}
+.serie-row:last-of-type{border-bottom:none}
+.serie-num{width:22px;font-size:12px;font-weight:700;color:#f97316;flex-shrink:0;text-align:center}
+.serie-lbl{font-size:11px;color:#555;width:28px;flex-shrink:0;text-transform:uppercase}
+.serie-input{width:66px;text-align:center;padding:6px;font-size:14px;font-weight:700;background:#242424;border:1px solid #3a3a3a;border-radius:8px;color:#f0f0f0;font-family:inherit;outline:none}
+.serie-status{width:24px;height:24px;border-radius:50%;border:2px solid #3a3a3a;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#242424;transition:all .15s}
+.serie-status:hover{border-color:#f97316}
+.serie-status.done{background:#f97316;border-color:#f97316}
+.serie-status.done::after{content:'';display:block;width:9px;height:9px;border-radius:50%;background:#000}
+.ultimo-ref{font-size:11px;color:#555;padding:6px 14px 9px;font-style:italic;background:#0f0f0f}
+.prog-bar-bg{height:5px;background:#242424;border-radius:3px;margin-top:5px;overflow:hidden}
+.prog-bar{height:5px;border-radius:3px;background:#f97316}
+.sesion-card{background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.sesion-header{background:#242424;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.sesion-header:hover{background:#2e2e2e}
+.sesion-fecha{font-size:13px;font-weight:700;color:#f97316;text-transform:uppercase;letter-spacing:.03em;flex:1}
+.sesion-body{padding:14px;border-top:1px solid #2e2e2e}
+.series-grid{display:flex;gap:6px;flex-wrap:wrap}
+.serie-chip{background:#242424;border:1px solid #3a3a3a;border-radius:8px;padding:7px 12px;text-align:center;min-width:68px}
+.serie-chip.done-chip{border-color:#7c3a0e;background:#1f1008}
+.serie-chip-num{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.serie-chip-kg{font-size:15px;font-weight:700;color:#f0f0f0}
+.serie-chip.done-chip .serie-chip-kg{color:#f97316}
+.serie-chip-reps{font-size:10px;color:#888;margin-top:1px}
+.record-banner{background:#1f1008;border:1px solid #7c3a0e;border-radius:8px;padding:8px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.record-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:9999;background:#f97316;color:#000;border-radius:16px;padding:24px 40px;text-align:center;font-family:system-ui,sans-serif;box-shadow:0 0 60px rgba(249,115,22,.6);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.record-popup.show{transform:translate(-50%,-50%) scale(1)}
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;z-index:9998;animation:confettiFall 1.5s ease-in forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+.chart-container{position:relative;height:180px;margin-top:12px}
+.alerta-row{padding:11px 14px;border-radius:8px;background:#1a1500;border:1px solid #713f12;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.demo-banner{background:#1f1008;border:1px solid #7c3a0e;border-radius:10px;padding:10px 16px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;font-size:12px;color:#f97316;font-weight:600}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+<!-- RECORD POPUP -->
+<div id="record-popup" class="record-popup">
+  <div style="font-size:48px;margin-bottom:8px">🏆</div>
+  <div style="font-size:22px;font-weight:800;letter-spacing:.04em;margin-bottom:4px">¡NUEVO RECORD!</div>
+  <div style="font-size:14px;font-weight:600;opacity:.8" id="record-popup-text"></div>
+</div>
+
+<!-- PANTALLA LOGIN -->
+<div id="screen-login">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem">
+    <div style="width:100%;max-width:400px">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div class="logo" style="font-size:40px">GYM<span>PRO</span></div>
+        <p style="margin-top:8px;font-size:14px;color:#888">Sistema de entrenamiento</p>
+      </div>
+      <div class="card">
+        <h2 style="text-align:center;margin-bottom:1.5rem">Ingresar como...</h2>
+        <div class="demo-banner">⚡ Demo — elegí con qué usuario querés entrar</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button class="btn btn-p" style="width:100%;padding:13px;font-size:14px" onclick="loginDemo('profe')">
+            👨‍🏫 Entrar como PROFE
+          </button>
+          <button class="btn-outline" style="width:100%;padding:13px;font-size:14px;border-radius:8px" onclick="loginDemo('alumno')">
+            💪 Entrar como ALUMNO
+          </button>
+        </div>
+        <p style="text-align:center;margin-top:1rem;font-size:11px;color:#555">Esta es una versión de demostración con datos de ejemplo</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="screen-app" class="hidden">
+  <div class="topbar">
+    <div class="f1"><div class="logo">GYM<span>PRO</span></div></div>
+    <div class="user-chip">
+      <div class="av av0" id="tb-av"></div>
+      <span id="tb-nombre"></span>
+      <span class="badge bo" id="tb-rol"></span>
+    </div>
+    <button class="btn-ghost" onclick="doLogout()">Salir</button>
+  </div>
+
+  <div class="tabs hidden" id="tabs-profe">
+    <button class="tab active" onclick="swP('dashboard')">Dashboard</button>
+    <button class="tab" onclick="swP('alumnos')">Alumnos</button>
+    <button class="tab" onclick="swP('cats')">Categorias</button>
+    <button class="tab" onclick="swP('resumen')">Resumen</button>
+  </div>
+  <div class="tabs hidden" id="tabs-alumno">
+    <button class="tab active" onclick="swA('entrenar')">Entrenar</button>
+    <button class="tab" onclick="swA('historial')">Mi historial</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="vp-dashboard" class="hidden">
+    <div class="demo-banner">⚡ Demo — datos de ejemplo para mostrar el sistema</div>
+    <div class="g4" style="margin-bottom:1rem">
+      <div class="metric"><div class="mv mv-acc">8</div><div class="ml">Alumnos</div></div>
+      <div class="metric"><div class="mv">3</div><div class="ml">Categorias</div></div>
+      <div class="metric"><div class="mv">124</div><div class="ml">Sesiones</div></div>
+      <div class="metric"><div class="mv" style="color:#eab308">2</div><div class="ml">Cambios pendientes</div></div>
+    </div>
+    <div class="alerta-row"><div class="f1"><span style="font-size:13px;font-weight:700">Valentina Torres</span><span style="font-size:12px;color:#eab308;margin-left:8px">Ciclo de 6 semanas completado</span></div><button class="btn btn-warn btn-s">Reiniciar ciclo</button></div>
+    <div class="alerta-row"><div class="f1"><span style="font-size:13px;font-weight:700">Marcos Diaz</span><span style="font-size:12px;color:#eab308;margin-left:8px">Ciclo de 6 semanas completado</span></div><button class="btn btn-warn btn-s">Reiniciar ciclo</button></div>
+    <div class="card" style="margin-top:1rem">
+      <h2>Alumnos activos</h2>
+      <div class="arow"><div class="av av0">VT</div><div class="f1"><div style="font-size:13px;font-weight:600">Valentina Torres</div><div style="font-size:11px;color:#888">Fuerza general · Fuerza A · 18 sesiones</div></div><span class="badge br">CAMBIAR YA</span><button class="btn btn-s" onclick="verDetalle()" style="margin-left:6px">Ver alumno</button></div>
+      <div class="arow"><div class="av av1">MD</div><div class="f1"><div style="font-size:13px;font-weight:600">Marcos Diaz</div><div style="font-size:11px;color:#888">Hipertrofia · Hiper A · 22 sesiones</div></div><span class="badge br">CAMBIAR YA</span><button class="btn btn-s" style="margin-left:6px">Ver alumno</button></div>
+      <div class="arow"><div class="av av2">JG</div><div class="f1"><div style="font-size:13px;font-weight:600">Juan Garcia</div><div style="font-size:11px;color:#888">Fuerza general · Fuerza B · 15 sesiones</div></div><span class="badge ba">SEM 5/6</span><button class="btn btn-s" style="margin-left:6px">Ver alumno</button></div>
+      <div class="arow"><div class="av av3">LM</div><div class="f1"><div style="font-size:13px;font-weight:600">Lucas Mendez</div><div style="font-size:11px;color:#888">Full Body · Full A · 9 sesiones</div></div><span class="badge bg">SEM 3/6</span><button class="btn btn-s" style="margin-left:6px">Ver alumno</button></div>
+      <div class="arow"><div class="av av4">SR</div><div class="f1"><div style="font-size:13px;font-weight:600">Sofia Rodriguez</div><div style="font-size:11px;color:#888">Hipertrofia · Hiper B · 31 sesiones</div></div><span class="badge bg">SEM 2/6</span><button class="btn btn-s" style="margin-left:6px">Ver alumno</button></div>
+    </div>
+
+    <!-- DETALLE ALUMNO -->
+    <div class="card hidden" id="card-detalle">
+      <div class="row" style="margin-bottom:1.25rem">
+        <div class="f1"><div style="font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Valentina Torres</div><div style="font-size:12px;color:#888;margin-top:2px">Fuerza general · Fuerza A</div></div>
+        <button class="btn btn-outline btn-s" onclick="cerrarDetalle()">Cerrar</button>
+      </div>
+      <div class="g3" style="margin-bottom:1.25rem">
+        <div class="metric"><div class="mv mv-acc">18</div><div class="ml">Sesiones totales</div></div>
+        <div class="metric"><div class="mv" style="font-size:13px">Fuerza A</div><div class="ml">Rutina actual</div></div>
+        <div class="metric"><div class="mv" style="color:#eab308">0</div><div class="ml">Dias para cambio</div></div>
+      </div>
+      <h3 style="margin-bottom:8px">Rotacion del ciclo</h3>
+      <div style="margin-bottom:1.25rem"><span class="rot-pill activa">Fuerza A</span> → <span class="rot-pill">Fuerza B</span> → <span class="rot-pill">Fuerza C</span></div>
+      <h3 style="margin-bottom:8px">Records personales</h3>
+      <div style="margin-bottom:1.25rem">
+        <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Sentadilla</span></div><span style="font-size:16px;font-weight:800;color:#f97316">95 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+        <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Press banca</span></div><span style="font-size:16px;font-weight:800;color:#f97316">72.5 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+        <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Peso muerto</span></div><span style="font-size:16px;font-weight:800;color:#f97316">115 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+      </div>
+      <h3 style="margin-bottom:8px">Progreso por ejercicio</h3>
+      <div id="d-progreso-charts" style="margin-bottom:1.25rem"></div>
+      <h3 style="margin-bottom:12px">Ultima sesion</h3>
+      <div class="sesion-card">
+        <div class="sesion-header" onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.ti').textContent=this.nextElementSibling.classList.contains('hidden')?'+':'−'">
+          <div class="sesion-fecha">Miercoles 21 de mayo</div>
+          <div style="font-size:11px;color:#888">Energia 4/5 · Sueno: Bien · Dolor: ninguno</div>
+          <span class="ti" style="font-size:20px;color:#f97316;margin-left:8px;font-weight:700">+</span>
+        </div>
+        <div class="sesion-body hidden">
+          <div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;margin-bottom:8px">Sentadilla</div><div class="series-grid"><div class="serie-chip done-chip"><div class="serie-chip-num">S1</div><div class="serie-chip-kg">95<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S2</div><div class="serie-chip-kg">92.5<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S3</div><div class="serie-chip-kg">90<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S4</div><div class="serie-chip-kg">87.5<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div></div></div>
+          <div><div style="font-size:12px;font-weight:700;text-transform:uppercase;margin-bottom:8px">Press banca</div><div class="series-grid"><div class="serie-chip done-chip"><div class="serie-chip-num">S1</div><div class="serie-chip-kg">72.5<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S2</div><div class="serie-chip-kg">70<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S3</div><div class="serie-chip-kg">70<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div><div class="serie-chip done-chip"><div class="serie-chip-num">S4</div><div class="serie-chip-kg">67.5<span style="font-size:9px;font-weight:400;color:#888">kg</span></div><div class="serie-chip-reps">8 reps</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALUMNOS -->
+  <div id="vp-alumnos" class="hidden">
+    <div class="card">
+      <div class="demo-banner">⚡ Demo — en la app real se guardan en la base de datos</div>
+      <h2>Alumnos registrados</h2>
+      <div class="arow"><div class="av av0">VT</div><div class="f1"><div style="font-size:13px;font-weight:600">Valentina Torres</div><div style="font-size:11px;color:#888">Fuerza general · 18 sesiones</div></div><span class="badge bb">ALUMNO</span><button class="btn btn-outline btn-s" style="margin-left:6px">Cambiar pass</button><button class="btn btn-danger" style="margin-left:6px">Eliminar</button></div>
+      <div class="arow"><div class="av av1">MD</div><div class="f1"><div style="font-size:13px;font-weight:600">Marcos Diaz</div><div style="font-size:11px;color:#888">Hipertrofia · 22 sesiones</div></div><span class="badge bb">ALUMNO</span><button class="btn btn-outline btn-s" style="margin-left:6px">Cambiar pass</button><button class="btn btn-danger" style="margin-left:6px">Eliminar</button></div>
+      <div class="arow"><div class="av av2">JG</div><div class="f1"><div style="font-size:13px;font-weight:600">Juan Garcia</div><div style="font-size:11px;color:#888">Fuerza general · 15 sesiones</div></div><span class="badge bb">ALUMNO</span><button class="btn btn-outline btn-s" style="margin-left:6px">Cambiar pass</button><button class="btn btn-danger" style="margin-left:6px">Eliminar</button></div>
+      <div class="sep"></div>
+      <h3 style="margin-bottom:8px">Agregar nuevo alumno</h3>
+      <p style="margin-bottom:12px">El profe crea la cuenta y le da el email y contraseña al alumno.</p>
+      <div class="g2"><div><label>Nombre completo</label><input style="font-size:13px;padding:8px 11px;border:1px solid #3a3a3a;border-radius:8px;background:#242424;color:#f0f0f0;width:100%;font-family:inherit" placeholder="Ej: Valentina Torres"/></div><div><label>Email del alumno</label><input style="font-size:13px;padding:8px 11px;border:1px solid #3a3a3a;border-radius:8px;background:#242424;color:#f0f0f0;width:100%;font-family:inherit" type="email" placeholder="alumno@email.com"/></div></div>
+      <div class="g2"><div><label>Contraseña inicial</label><input style="font-size:13px;padding:8px 11px;border:1px solid #3a3a3a;border-radius:8px;background:#242424;color:#f0f0f0;width:100%;font-family:inherit" placeholder="Ej: Gym2024!"/></div><div><label>Categoria</label><select style="font-size:13px;padding:8px 11px;border:1px solid #3a3a3a;border-radius:8px;background:#242424;color:#f0f0f0;width:100%;font-family:inherit"><option>Fuerza general</option><option>Hipertrofia</option><option>Full Body</option></select></div></div>
+      <div style="margin-top:14px"><button class="btn btn-p">+ Agregar alumno</button></div>
+    </div>
+  </div>
+
+  <!-- CATEGORIAS -->
+  <div id="vp-cats" class="hidden">
+    <div class="card">
+      <div class="demo-banner">⚡ Demo — en la app real cada rutina se carga con sus ejercicios</div>
+      <div class="row" style="margin-bottom:1rem"><h2 style="flex:1;margin:0">Categorias y rutinas</h2><button class="btn btn-p btn-s">+ Categoria</button></div>
+      <p style="margin-bottom:1rem">Hasta 4 rutinas por categoria. Rotacion automatica A→B→C→D cada 6 semanas.</p>
+      <div class="card-inner">
+        <div class="row" style="margin-bottom:8px"><div class="f1"><div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Fuerza general</div><div style="font-size:11px;color:#888">Patrones de fuerza basica</div></div><span class="badge bb">3/4</span><button class="btn btn-p btn-s" style="margin-left:6px">+ Rutina</button><button class="btn btn-danger" style="margin-left:6px">Eliminar cat.</button></div>
+        <div style="margin-bottom:10px"><span class="rot-pill activa">Fuerza A</span> → <span class="rot-pill">Fuerza B</span> → <span class="rot-pill">Fuerza C</span></div>
+        <div style="background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:3px">Fuerza A</div><div style="font-size:11px;color:#888">Press banca (4x8) · Sentadilla (4x10) · Peso muerto (3x6) · Press militar (3x10)</div></div><button class="btn btn-danger">Eliminar</button></div>
+        <div style="background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:3px">Fuerza B</div><div style="font-size:11px;color:#888">Dominadas (4x8) · Remo barra (4x10) · Hip thrust (4x12) · Fondos (3x10)</div></div><button class="btn btn-danger">Eliminar</button></div>
+        <div style="background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:3px">Fuerza C</div><div style="font-size:11px;color:#888">Sentadilla sumo (4x10) · Press inclinado (4x8) · Curl biceps (3x12) · Triceps (3x12)</div></div><button class="btn btn-danger">Eliminar</button></div>
+      </div>
+      <div class="card-inner">
+        <div class="row" style="margin-bottom:8px"><div class="f1"><div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Hipertrofia</div><div style="font-size:11px;color:#888">Volumen e hipertrofia muscular</div></div><span class="badge bb">2/4</span><button class="btn btn-p btn-s" style="margin-left:6px">+ Rutina</button><button class="btn btn-danger" style="margin-left:6px">Eliminar cat.</button></div>
+        <div style="margin-bottom:10px"><span class="rot-pill activa">Hiper A</span> → <span class="rot-pill">Hiper B</span></div>
+        <div style="background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:3px">Hiper A</div><div style="font-size:11px;color:#888">Press banca (5x10) · Aperturas (4x12) · Press hombro (4x10) · Laterales (3x15)</div></div><button class="btn btn-danger">Eliminar</button></div>
+        <div style="background:#0f0f0f;border:1px solid #2e2e2e;border-radius:8px;padding:8px 10px;margin-top:6px;display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:3px">Hiper B</div><div style="font-size:11px;color:#888">Sentadilla (5x10) · Prensa (4x12) · Extension cuad (3x15) · Curl femoral (3x15)</div></div><button class="btn btn-danger">Eliminar</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div id="vp-resumen" class="hidden">
+    <div class="g2" style="margin-bottom:1rem">
+      <div class="metric"><div class="mv mv-acc">14</div><div class="ml">Sesiones esta semana</div></div>
+      <div class="metric"><div class="mv">6</div><div class="ml">Alumnos que entrenaron</div></div>
+    </div>
+    <div class="card"><h2>Actividad semanal</h2>
+      <div class="arow"><div class="av av0">VT</div><div class="f1"><div style="font-size:13px;font-weight:600">Valentina Torres</div><div style="font-size:11px;color:#888">Fuerza A · Cambio pendiente</div></div><span class="badge bg">ENTRENO</span><span style="font-size:12px;color:#888;margin-left:6px">3 ses.</span></div>
+      <div class="arow"><div class="av av1">MD</div><div class="f1"><div style="font-size:13px;font-weight:600">Marcos Diaz</div><div style="font-size:11px;color:#888">Hiper A · Cambio pendiente</div></div><span class="badge bg">ENTRENO</span><span style="font-size:12px;color:#888;margin-left:6px">2 ses.</span></div>
+      <div class="arow"><div class="av av2">JG</div><div class="f1"><div style="font-size:13px;font-weight:600">Juan Garcia</div><div style="font-size:11px;color:#888">Fuerza B · 7 dias</div></div><span class="badge bg">ENTRENO</span><span style="font-size:12px;color:#888;margin-left:6px">3 ses.</span></div>
+      <div class="arow"><div class="av av3">LM</div><div class="f1"><div style="font-size:13px;font-weight:600">Lucas Mendez</div><div style="font-size:11px;color:#888">Full A · 21 dias</div></div><span class="badge br">SIN ACTIVIDAD</span><span style="font-size:12px;color:#888;margin-left:6px">0 ses.</span></div>
+      <div class="arow"><div class="av av4">SR</div><div class="f1"><div style="font-size:13px;font-weight:600">Sofia Rodriguez</div><div style="font-size:11px;color:#888">Hiper B · 35 dias</div></div><span class="badge bg">ENTRENO</span><span style="font-size:12px;color:#888;margin-left:6px">2 ses.</span></div>
+    </div>
+    <div class="card"><h2>Alertas de bienestar</h2>
+      <div class="arow"><div class="av av3">LM</div><div class="f1"><span style="font-size:13px;font-weight:600">Lucas Mendez</span><span style="font-size:12px;color:#eab308;margin-left:8px">Energia promedio baja: 2.1/5</span></div></div>
+      <div class="arow"><div class="av av2">JG</div><div class="f1"><span style="font-size:13px;font-weight:600">Juan Garcia</span><span style="font-size:12px;color:#ef4444;margin-left:8px">Dolor frecuente: hombro, hombro</span></div></div>
+    </div>
+  </div>
+
+  <!-- ALUMNO: ENTRENAR -->
+  <div id="va-entrenar" class="hidden">
+    <div id="paso-encuesta">
+      <div class="card">
+        <div class="demo-banner">⚡ Demo — probá completar la encuesta y empezar el entrenamiento</div>
+        <div class="row" style="margin-bottom:1rem">
+          <div class="f1"><div style="font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Juan Garcia</div><div style="font-size:12px;color:#888;margin-top:2px">Fuerza general · Fuerza B</div></div>
+          <span class="badge bo">SEM 4/6</span>
+        </div>
+        <div style="margin-bottom:1.25rem">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:4px"><span>Progreso del ciclo</span><span>66%</span></div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:66%"></div></div>
+        </div>
+        <h2 style="margin-bottom:1rem">Como llego hoy</h2>
+        <h3 style="margin-bottom:8px">Nivel de energia</h3>
+        <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:1.25rem">
+          <button class="emo-btn" onclick="selEnc('energia',1,this)">1 — Bajo</button>
+          <button class="emo-btn" onclick="selEnc('energia',2,this)">2</button>
+          <button class="emo-btn" onclick="selEnc('energia',3,this)">3 — Normal</button>
+          <button class="emo-btn" onclick="selEnc('energia',4,this)">4</button>
+          <button class="emo-btn" onclick="selEnc('energia',5,this)">5 — Excelente</button>
+        </div>
+        <h3 style="margin-bottom:8px">Calidad del sueno</h3>
+        <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:1.25rem">
+          <button class="emo-btn" onclick="selEnc('sueno',1,this)">Mal</button>
+          <button class="emo-btn" onclick="selEnc('sueno',2,this)">Regular</button>
+          <button class="emo-btn" onclick="selEnc('sueno',3,this)">Bien</button>
+          <button class="emo-btn" onclick="selEnc('sueno',4,this)">Muy bien</button>
+        </div>
+        <h3 style="margin-bottom:8px">Dolor o molestia</h3>
+        <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:1.5rem">
+          <button class="emo-btn" onclick="selEnc('dolor','ninguno',this)">Sin dolor</button>
+          <button class="emo-btn" onclick="selEnc('dolor','leve',this)">Leve</button>
+          <button class="emo-btn" onclick="selEnc('dolor','hombro',this)">Hombro</button>
+          <button class="emo-btn" onclick="selEnc('dolor','rodilla',this)">Rodilla</button>
+          <button class="emo-btn" onclick="selEnc('dolor','lumbar',this)">Lumbar</button>
+        </div>
+        <button class="btn btn-p" style="width:100%;padding:12px;font-size:14px" onclick="iniciarEntrenamiento()">EMPEZAR ENTRENAMIENTO</button>
+      </div>
+    </div>
+    <div id="paso-entrena" class="hidden">
+      <div class="card">
+        <div class="row" style="margin-bottom:.75rem">
+          <div class="f1"><div style="font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Juan Garcia</div><div style="font-size:12px;color:#888">Fuerza B · Miercoles 21 de mayo</div></div>
+        </div>
+        <p style="margin-bottom:1rem;color:#555">Carga el peso de cada serie y tildala cuando la termines.</p>
+        <div class="ej-bloque">
+          <div class="ej-header"><div class="ej-nombre">Dominadas</div><span class="ej-meta">4 series · 8 reps objetivo</span></div>
+          <div class="serie-row"><div class="serie-num">S1</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="75" min="0" step="2.5"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="8" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="serie-row"><div class="serie-num">S2</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="75" min="0" step="2.5"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="8" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="serie-row"><div class="serie-num">S3</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="72.5" min="0" step="2.5"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="8" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="serie-row"><div class="serie-num">S4</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="" min="0" step="2.5" placeholder="—"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="8" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="ultimo-ref">Ultima vez — S1: 72.5kg×8 · S2: 72.5kg×8 · S3: 70kg×8 · S4: 70kg×8</div>
+        </div>
+        <div class="ej-bloque">
+          <div class="ej-header"><div class="ej-nombre">Remo barra</div><span class="ej-meta">4 series · 10 reps objetivo</span></div>
+          <div class="serie-row"><div class="serie-num">S1</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="80" min="0" step="2.5"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="10" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="serie-row"><div class="serie-num">S2</div><span class="serie-lbl">kg</span><input type="number" class="serie-input" value="80" min="0" step="2.5"/><span class="serie-lbl">reps</span><input type="number" class="serie-input" value="10" min="1"/><div class="serie-status" onclick="this.classList.toggle('done')"></div></div>
+          <div class="ultimo-ref">Ultima vez — S1: 77.5kg×10 · S2: 77.5kg×10</div>
+        </div>
+        <label style="margin-top:1rem">Nota de la sesion</label>
+        <textarea rows="2" placeholder="Opcional..." style="resize:none;font-size:13px;padding:8px 11px;border:1px solid #3a3a3a;border-radius:8px;background:#242424;color:#f0f0f0;width:100%;font-family:inherit;outline:none"></textarea>
+        <button class="btn btn-p" style="width:100%;margin-top:12px;padding:11px" onclick="guardarSesionDemo()">GUARDAR SESION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALUMNO: HISTORIAL -->
+  <div id="va-historial" class="hidden">
+    <div class="card"><h2>Records personales</h2>
+      <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Dominadas</span></div><span style="font-size:16px;font-weight:800;color:#f97316">80 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+      <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Remo barra</span></div><span style="font-size:16px;font-weight:800;color:#f97316">82.5 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+      <div class="record-banner"><div class="f1"><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Hip thrust</span></div><span style="font-size:16px;font-weight:800;color:#f97316">120 kg</span><span style="font-size:10px;color:#7c3a0e;margin-left:6px;font-weight:700">RECORD</span></div>
+    </div>
+    <div class="card"><h2>Progreso por ejercicio</h2><div id="al-progreso-charts"></div></div>
+    <div class="card"><h2>Historial de sesiones</h2>
+      <div style="padding:12px 0;border-bottom:1px solid #2e2e2e"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Miercoles 21 de mayo</div><div style="font-size:11px;color:#555;margin-bottom:6px">Energia 4/5 · Bien · Dolor: ninguno</div><div style="margin-bottom:6px"><div style="font-size:12px;font-weight:700;margin-bottom:2px">Dominadas</div><div style="font-size:11px;color:#888"><span style="margin-right:8px">S1: 75kg×8</span><span style="margin-right:8px">S2: 75kg×8</span><span style="margin-right:8px;opacity:.4">S3: 72.5kg×8</span></div></div></div>
+      <div style="padding:12px 0;border-bottom:1px solid #2e2e2e"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Lunes 19 de mayo</div><div style="font-size:11px;color:#555;margin-bottom:6px">Energia 3/5 · Regular · Dolor: hombro</div><div style="margin-bottom:6px"><div style="font-size:12px;font-weight:700;margin-bottom:2px">Dominadas</div><div style="font-size:11px;color:#888"><span style="margin-right:8px">S1: 72.5kg×8</span><span style="margin-right:8px">S2: 72.5kg×8</span><span style="margin-right:8px">S3: 70kg×8</span></div></div></div>
+      <div style="padding:12px 0"><div style="font-size:12px;font-weight:700;color:#f97316;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em">Viernes 16 de mayo</div><div style="font-size:11px;color:#555;margin-bottom:6px">Energia 5/5 · Muy bien · Dolor: ninguno</div><div style="margin-bottom:6px"><div style="font-size:12px;font-weight:700;margin-bottom:2px">Dominadas</div><div style="font-size:11px;color:#888"><span style="margin-right:8px">S1: 70kg×8</span><span style="margin-right:8px">S2: 70kg×8</span><span style="margin-right:8px">S3: 67.5kg×8</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const encuesta={energia:0,sueno:0,dolor:''};
+let rolActual='';
+
+function loginDemo(rol){
+  rolActual=rol;
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('screen-app').classList.remove('hidden');
+  if(rol==='profe'){
+    document.getElementById('tb-nombre').textContent='Lucio Castellani';
+    document.getElementById('tb-rol').textContent='PROFESOR';
+    document.getElementById('tb-av').textContent='LC';
+    document.getElementById('tabs-profe').classList.remove('hidden');
+    document.getElementById('tabs-alumno').classList.add('hidden');
+    swP('dashboard');
+  } else {
+    document.getElementById('tb-nombre').textContent='Juan Garcia';
+    document.getElementById('tb-rol').textContent='ALUMNO';
+    document.getElementById('tb-av').textContent='JG';
+    document.getElementById('tabs-alumno').classList.remove('hidden');
+    document.getElementById('tabs-profe').classList.add('hidden');
+    swA('entrenar');
+  }
+}
+
+function doLogout(){
+  document.getElementById('screen-app').classList.add('hidden');
+  document.getElementById('screen-login').classList.remove('hidden');
+  document.getElementById('tabs-profe').classList.add('hidden');
+  document.getElementById('tabs-alumno').classList.add('hidden');
+  hideAllViews();
+}
+
+function hideAllViews(){
+  ['vp-dashboard','vp-alumnos','vp-cats','vp-resumen','va-entrenar','va-historial']
+    .forEach(id=>document.getElementById(id).classList.add('hidden'));
+}
+
+function swP(v){
+  ['dashboard','alumnos','cats','resumen'].forEach((x,i)=>{
+    document.getElementById('vp-'+x).classList.toggle('hidden',x!==v);
+    document.querySelectorAll('#tabs-profe .tab')[i]?.classList.toggle('active',x===v);
+  });
+  if(v==='dashboard') renderProfeCharts();
+}
+
+function swA(v){
+  ['entrenar','historial'].forEach((x,i)=>{
+    document.getElementById('va-'+x).classList.toggle('hidden',x!==v);
+    document.querySelectorAll('#tabs-alumno .tab')[i]?.classList.toggle('active',x===v);
+  });
+  if(v==='historial') renderAlumnoCharts();
+}
+
+function verDetalle(){document.getElementById('card-detalle').classList.remove('hidden');renderProfeCharts();}
+function cerrarDetalle(){document.getElementById('card-detalle').classList.add('hidden');}
+
+function selEnc(campo,val,btn){
+  encuesta[campo]=val;
+  document.querySelectorAll('[onclick*="selEnc(\''+campo+'\'"]').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function iniciarEntrenamiento(){
+  document.getElementById('paso-encuesta').classList.add('hidden');
+  document.getElementById('paso-entrena').classList.remove('hidden');
+}
+
+function guardarSesionDemo(){
+  mostrarRecordPopup('Dominadas','75 kg');
+  document.getElementById('paso-entrena').classList.add('hidden');
+  document.getElementById('paso-encuesta').classList.remove('hidden');
+  document.querySelectorAll('.emo-btn').forEach(b=>b.classList.remove('sel'));
+}
+
+function mostrarRecordPopup(ej,kg){
+  const popup=document.getElementById('record-popup');
+  document.getElementById('record-popup-text').textContent=ej+' — '+kg;
+  popup.classList.add('show');
+  lanzarConfetti();
+  setTimeout(()=>popup.classList.remove('show'),3000);
+}
+
+function lanzarConfetti(){
+  const cols=['#f97316','#eab308','#22c55e','#3b82f6','#ef4444','#ffffff'];
+  for(let i=0;i<50;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;top:${Math.random()*30+20}vh;background:${cols[Math.floor(Math.random()*cols.length)]};animation-delay:${Math.random()*.5}s;animation-duration:${1+Math.random()}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2500);
+  }
+}
+
+let chartsRendered={profe:false,alumno:false};
+
+function renderProfeCharts(){
+  if(chartsRendered.profe) return;
+  chartsRendered.profe=true;
+  const cont=document.getElementById('d-progreso-charts');
+  const data=[
+    {ej:'Sentadilla',kgs:[75,80,82.5,87.5,92.5,95],pct:'+27%',col:'#22c55e'},
+    {ej:'Press banca',kgs:[60,62.5,65,67.5,70,72.5],pct:'+21%',col:'#22c55e'},
+    {ej:'Peso muerto',kgs:[95,100,105,110,115,115],pct:'+21%',col:'#22c55e'},
+  ];
+  cont.innerHTML=data.map(d=>`<div style="margin-bottom:1.25rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em">${d.ej}</div><span style="font-size:13px;font-weight:700;color:${d.col}">${d.pct}</span></div><div class="chart-container"><canvas id="pc-${d.ej.replace(/\s/g,'_')}"></canvas></div></div>`).join('');
+  setTimeout(()=>data.forEach(d=>{
+    const c=document.getElementById('pc-'+d.ej.replace(/\s/g,'_'));
+    if(!c) return;
+    new Chart(c,{type:'line',data:{labels:d.kgs.map((_,i)=>'Ses '+(i+1)),datasets:[{data:d.kgs,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,0.1)',borderWidth:2,pointBackgroundColor:'#f97316',pointRadius:4,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'#2e2e2e'},ticks:{color:'#888',font:{size:10}}},x:{grid:{color:'#2e2e2e'},ticks:{color:'#888',font:{size:10}}}}}});
+  }),100);
+}
+
+function renderAlumnoCharts(){
+  if(chartsRendered.alumno) return;
+  chartsRendered.alumno=true;
+  const cont=document.getElementById('al-progreso-charts');
+  const data=[
+    {ej:'Dominadas',kgs:[65,67.5,70,72.5,75],pct:'+15%',col:'#22c55e'},
+    {ej:'Remo barra',kgs:[70,72.5,75,77.5,80],pct:'+14%',col:'#22c55e'},
+    {ej:'Hip thrust',kgs:[100,105,110,115,120],pct:'+20%',col:'#22c55e'},
+  ];
+  cont.innerHTML=data.map(d=>`<div style="margin-bottom:1.5rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.03em">${d.ej}</div><span style="font-size:14px;font-weight:700;color:${d.col}">${d.pct}</span></div><div class="chart-container"><canvas id="ac-${d.ej.replace(/\s/g,'_')}"></canvas></div></div>`).join('');
+  setTimeout(()=>data.forEach(d=>{
+    const c=document.getElementById('ac-'+d.ej.replace(/\s/g,'_'));
+    if(!c) return;
+    new Chart(c,{type:'line',data:{labels:d.kgs.map((_,i)=>'Ses '+(i+1)),datasets:[{data:d.kgs,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,0.1)',borderWidth:2,pointBackgroundColor:'#f97316',pointRadius:5,tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'#2e2e2e'},ticks:{color:'#888',font:{size:11}}},x:{grid:{color:'#2e2e2e'},ticks:{color:'#888',font:{size:11}}}}}});
+  }),100);
+}
+</script>
+</body>
+</html>
